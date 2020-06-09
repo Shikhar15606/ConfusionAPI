@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/shikhar2001/nodejs-coursera/issues"
   },
-  "homepage": "https://github.com/shikhar2001/nodejs-coursera#readme"
+  "homepage": "https://github.com/shikhar2001/nodejs-coursera#readme",
+  "dependencies": {
+    "morgan": "^1.10.0"
+  }
 }
