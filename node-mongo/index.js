@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+const dboper = require('./operations');
 
 const url = 'mongodb://localhost:27017/';
 const dbname = 'conFusion';
@@ -15,26 +16,30 @@ MongoClient.connect(url, (err, client) => {
     const db = client.db(dbname);
     const collection = db.collection("dishes");
 
-    collection.insertOne({"name": "Uthappizza", "description": "test"},
-    (err, result) => {
-        //note the callback to ensure that "after insert" is printed only after the document is inserted
-        assert.equal(err,null);
+    //note the callbacks to understand code flow
+    dboper.insertDocument(db, { name: "Vadonut", description: "Test"},
+        "dishes", (result) => {
+            console.log("Insert Document:\n", result.ops);
 
-        console.log("After Insert:\n");
-        console.log(result.ops);//to print the number of operations performed
-        //find operation inside the callback of insertOne to ensure that finding is done only after insertion
-        collection.find({}).toArray((err, docs) => {
-            assert.equal(err,null);
-            
-            console.log("Found:\n");
-            console.log(docs);
+            dboper.findDocuments(db, "dishes", (docs) => {
+                console.log("Found Documents:\n", docs);
 
-            db.dropCollection("dishes", (err, result) => {
-                assert.equal(err,null);
+                dboper.updateDocument(db, { name: "Vadonut" },
+                    { description: "Updated Test" }, "dishes",
+                    (result) => {
+                        console.log("Updated Document:\n", result.result);
 
-                client.close();
+                        dboper.findDocuments(db, "dishes", (docs) => {
+                            console.log("Found Updated Documents:\n", docs);
+                            
+                            db.dropCollection("dishes", (result) => {
+                                console.log("Dropped Collection: ", result);
+
+                                client.close();
+                            });
+                        });
+                    });
             });
-        });
     });
 
 });
