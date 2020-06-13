@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/shikhar2001/nodejs-coursera#readme",
   "dependencies": {
+    "express-generator": "^4.16.1",
     "morgan": "^1.10.0"
   }
 }
